@@ -22,26 +22,14 @@ $(document).ready(function(){
     				return;
     			}
 
-    			var list = data.result;
-    			if (!list) {
-    				alert("No results or smth :(");
-    				return;
-    			}
-
     			var html = "";
 
     			if (data.profile) {
-    				html += '<div class="center"><p class="lead text-danger">Displaying courses of '+data.profile+' : </p></div>';
+                    html = printCourses(data);
     			}
     			else if (data.course) {
-    				html += '<div class="center"><p class="lead text-danger">Displaying members of course #'+data.course+' : </p></div>'
+    				html = printStudents(data);
     			}
-
-    			html += "<ul>";
-    			for (var i = 0; i < list.length; i++) {
-    				html += '<li class="lead text-success">' + list[i] + '</li>'; 
-    			}
-    			html += "</ul>";
 
   				$("#results").html(html);
   				resize();
@@ -56,3 +44,33 @@ var resize =  function() {
     new_margin = Math.max(Math.ceil(($(window).height() - $('#results').height()) / 2) - 20,0);
     $('#results').css('margin-top', new_margin + 'px');
 };
+
+var printStudents = function(data) {
+    var html = '<p class="center text-muted">Displaying members of course</p>'; 
+    html += '<div class="center"><p class="lead text-danger">'+data.course+' : </p></div>';
+    html += "<ul>";
+    for (var i = 0; i < data.active.length; i++) {
+        html += '<li class="lead text-success">' + data.active[i] + '</li>'; 
+    }
+    for (var i = 0; i < data.locked.length; i++) {
+        html += '<li class="lead text-warning">' + data.locked[i] + '</li>'; 
+    }
+    for (var i = 0; i < data.disabled.length; i++) {
+        html += '<li class="lead text-muted">' + data.disabled[i] + '</li>'; 
+    }
+    html += "</ul>";
+
+    return html;
+};
+
+var printCourses = function(data) {
+    var html = '<p class="center text-muted">Displaying courses of</p>'; 
+    var html = '<div class="center"><p class="lead text-danger">'+data.profile+' : </p></div>';
+    html += "<ul>";
+    for (var i = 0; i < data.courses.length; i++) {
+        html += '<li class="lead text-success">(' + data.courses[i].id + ') ' + data.courses[i].name + '</li>'; 
+    }
+    html += "</ul>";
+
+    return html;
+}

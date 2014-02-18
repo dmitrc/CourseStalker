@@ -1,5 +1,6 @@
 var ldap = require('ldapjs');
 var express = require('express');
+var utils = require('./utils.js');
 var app = express();
 
 var port = 3030;
@@ -23,67 +24,47 @@ app.post('/lookup', function(req,res) {
 
 	if (!num && !profile) {
 		res.send(200, JSON.stringify({error: "You should try to write either course ID or CampusNet profile, dude..."}));
+		return;
 	}
 
 	if (num && profile) {
 		res.send(200, JSON.stringify({error: "You should pick profile OR course ID, mate..."}));
+		return;
 	}
 
 	ldap_client.bind(user+'@jacobs.jacobs-university.de', pass, function(err) {
 
 		if (!(err === null)) {
-			res.send(200, JSON.stringify({error:"Login failed! :(" + err}));
+			res.send(200, JSON.stringify({error:"Login failed! :("}));
 			return;
 		}
 	 
+	 	// Course members
 		if (num) {
-			var opts = {
-				filter: null,
-				scope: 'sub'
-			};
-
-			ldap_client.search('CN=GS-CAMPUSNET-COURSE-'+num+',OU=Groups,OU=CampusNet,DC=jacobs,DC=jacobs-university,DC=de', opts, function(err,search) {
-		  		search.on('searchEntry', function (entry) {
-		      		var members = entry.object.member;
-
-		      		for (var i = 0; i < members.length; i++) {
-		      			// Separate function!
-		      			members[i] = members[i].replace(",OU=Active,OU=Users,OU=CampusNet,DC=jacobs,DC=jacobs-university,DC=de","").replace(",OU=Disabled,OU=Users,OU=CampusNet,DC=jacobs,DC=jacobs-university,DC=de","").replace("CN=","").replace("\\,","").replace(/ *\([^)]*\) */g, "");
-		      		}
-
-		      		res.send(200,JSON.stringify({result: members, course: num}));
-		    	});
-			});	
-		}
-		else if (profile) {
-			var opts = {
-				filter: '(sAMAccountName='+profile+')',
-				scope: 'sub'
-			};
-
-			ldap_client.search('OU=Active,OU=Users,OU=CampusNet,DC=jacobs,DC=jacobs-university,DC=de', opts, function(err,search) {
-		  		search.on('searchEntry', function (entry) {
-		      		var membership = entry.object.memberOf;
-
-		      		for (var i = 0; i < membership.length; i++) {
-		      			membership[i] = membership[i].replace(",OU=Groups,OU=CampusNet,DC=jacobs,DC=jacobs-university,DC=de","").replace("CN=GS-CAMPUSNET-COURSE-","");
-		      		}
-
-		      		membership = membership.filter(function(i) {
-						var check = i.substr(0,2);
-						return check != "CN";
-					});
-
-		      		res.send(200, JSON.stringify({result: membership, profile: profile}));
-		    	});
+			utils.getCourseMembers(ldap_client, num, function(output) {
+				res.send(200,JSON.stringify(output));
 			});
 		}
+
+		// Courses of a person
+		else if (profile) {
+			utils.getStudentCourses(ldap_client, profile, function(output) {
+				res.send(200,JSON.stringify(output));
+
+				ldap_client.unbind(function(err) {
+      				if (err) console.log(err);
+      			});
+			});
+		}
+
+		// How did this happen, again?
 		else {
 			res.send(200, JSON.stringify({error:"Something broke. Oops :("}))
 		}
 	});
 });
 
+// Serve files from ./public/
  app.get(/^(.+)$/, function(req, res) { 
  	res.sendfile('./public' + req.params[0]); 
  });
