@@ -1,0 +1,10 @@
+{
+  "name": "LDAPExperiments",
+  "description": "A package using naive versioning",
+  "author": "Dmitrii Cucleschin <dmitrii.cucleschin@gmail.com>",
+  "dependencies": {
+    "express": "~3.4.8",
+    "ldapjs": "~0.7.0"
+  },
+  "engine": "node 0.4.1"
+}

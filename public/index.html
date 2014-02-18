@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Course Lookup Tool v.0.0.1</title>
+	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/bootstrap-theme.min.css">
+</head>
+<body>
+	<div class="row">
+		<div class="col-lg-1 col-md-1 col-sm-1">
+		</div>
+
+		<div class="well col-lg-3 col-md-3 col-sm-3 fill center">
+			<div id="form">
+				<form role="form">
+					<div class="from-group">
+						<input type="text" name="username" id="username" class="form-control" placeholder="Username"></input>
+					</div>
+					<br/>
+					<div class="from-group">
+						<input type="password" name="password" id="password" class="form-control" placeholder="Password"></input>
+					</div>
+					<br/><br/>
+					<div class="from-group">
+						<input type="text" name="course" id="course" class="form-control" placeholder="Course ID"></input>
+					</div>
+					<div class="center text-muted">...or...</div>
+					<div class="from-group">
+						<input type="text" name="profile" id="profile" class="form-control" placeholder="CampusNET username"></input>
+					</div>
+					<br/><br/>
+					<div class="from-group">
+						<button type="button" id="submit" class="btn btn-block btn-success">Lookup!</button>
+					</div>
+				</form>
+			</div>
+			<br/><br/><br/><br/><br/>
+			<p class="text-muted">This tool is made by Dmitrii Cucleschin.<br/>(mostly out of boredom :P)</p>
+		</div>
+
+		<div class="col-lg-1 col-md-1 col-sm-1">
+		</div>
+
+		<div class="well col-lg-6 col-md-6 col-sm-6 fill">
+			<div id="results">
+				<p class="lead text-info center">Your results will appear here...</p>
+			</div>
+		</div>
+
+		<div class="col-lg-1 col-md-1 col-sm-1">
+		</div>
+	</div>
+
+	<script src="js/jquery-2.1.0.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/main.js"></script>
+</body>
+</html>
