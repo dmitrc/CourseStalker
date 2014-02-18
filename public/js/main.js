@@ -6,6 +6,7 @@ $(document).ready(function(){
     });
 
     $('#submit').click(function() {
+
     	$.post('/lookup', 
     		{
     			username: $("#username").val(),
@@ -65,7 +66,7 @@ var printStudents = function(data) {
 
 var printCourses = function(data) {
     var html = '<p class="center text-muted">Displaying courses of</p>'; 
-    var html = '<div class="center"><p class="lead text-danger">'+data.profile+' : </p></div>';
+    html += '<div class="center"><p class="lead text-danger">'+data.profile+' : </p></div>';
     html += "<ul>";
     for (var i = 0; i < data.courses.length; i++) {
         html += '<li class="lead text-success">(' + data.courses[i].id + ') ' + data.courses[i].name + '</li>'; 
